@@ -1,16 +1,16 @@
 (lang dune 3.8)
 
-
- ; (action-plugin 0.1)
 (using melange 0.1)
+
+(generate_opam_files)
 
 (name relude)
 
 (license "MIT")
 
-(maintainers <your_name>)
+(maintainers "Andy White" "Michael Martin")
 
-(authors <your_name>)
+(authors "Andy White" "Michael Martin")
 
 (homepage https://github.com/reazen/relude)
 
@@ -19,12 +19,14 @@
 (package
  (name relude)
  (synopsis "Relude")
- (description "Alternative standard library (prelude) for ReasonML"))
-
- ; (tags
- ;  ("category theory" "abstract algebra" "algebra" "cats"))
- ; (depends
- ;  (ocaml (>= 4.14))
- ;  (bisect_ppx (and (>= 2.1.0)))
- ;  (odoc (and (>= 1.5.0) :with-doc))
- ;  (dune (>= 2.0.1))))
+ (description "Alternative standard library (prelude) for ReasonML")
+ (depends
+  reason
+  (melange
+   (and
+    (>= 3.0.0)
+    (< 4.0.0)))
+  dune
+  bastet
+  melange-jest
+  opam-check-npm-deps))

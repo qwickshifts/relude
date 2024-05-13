@@ -22,8 +22,9 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "docsify-cli": "~4.4.0",
     "jest": "^26.5.2",
-    "docsify-cli": "~4.4.0"
+    "@testing-library/jest-dom": "^5.10.0"
   },
   "jest": {
     "verbose": false,

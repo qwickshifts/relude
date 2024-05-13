@@ -1,41 +1,61 @@
-.PHONY: create-switch
-create-switch:
-	opam switch create -y . --deps-only
+project_name = relude
 
-.PHONY: install
-install:
-	yarn install --legacy-peer-deps
-	opam update
-	opam install -y .
+DUNE = opam exec -- dune
+
+.DEFAULT_GOAL := help
+
+.PHONY: help
+help: ## Print this help message
+	@echo "List of available make commands";
+	@echo "";
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}';
+	@echo "";
+
+.PHONY: nuke
+nuke: ## Delete all files that will be generated
+	rm -f $(project_name).opam
+	rm -rf node_modules
+	rm -rf _opam
+	rm -rf _build
+
+.PHONY: create-switch
+create-switch: ## Create opam switch
+	opam switch create . -y --deps-only --no-install --packages=dune,ocamlformat,ocaml-lsp-server,ocaml-base-compiler
 
 .PHONY: init
-init: create-switch install
+init: create-switch install ## Configure everything to develop this repository in local
 
-.PHONY: clean
-clean:
-	opam exec -- dune clean
+.PHONY: generate-opam
+generate-opam: ## Generate the opam file
+	$(DUNE) build $(project_name).opam
+
+.PHONY: install
+install: generate-opam ## Install development dependencies
+	yarn install
+	opam update
+	opam install -y . --deps-only --with-test 
+	opam exec opam-check-npm-deps
 
 .PHONY: build
-build:
-	opam exec -- dune build @relude @test --display short
+build: ## Build the project
+	$(DUNE) build
 
 .PHONY: watch
-watch:
-	opam exec -- dune build @relude @test -w
-
-.PHONY: dev-tools
-dev-tools:
-	opam install -y ocamlformat utop ocaml-lsp-server
+watch: ## Watch for the filesystem and rebuild on every change
+	$(DUNE) build --watch
 
 .PHONY: test
-test:
-	yarn test
-
-.PHONY: test-coverage
-test-coverage:
+test: 
 	yarn test --coverage
 
-.PHONY: docs
-docs:
-	yarn docs
+.PHONY: clean
+clean: ## Clean build artifacts and other generated files
+	$(DUNE) clean
 
+.PHONY: format
+format: ## Format the codebase with ocamlformat
+	$(DUNE) build @fmt --auto-promote
+
+.PHONY: format-check
+format-check: ## Checks if format is correct
+	$(DUNE) build @fmt
