@@ -30,3 +30,6 @@ build: [
     "@doc" {with-doc}
   ]
 ]
+pin-depends: [
+  [ "bastet.dev" "git+https://github.com/qwickshifts/bastet.git#melange3" ]
+]

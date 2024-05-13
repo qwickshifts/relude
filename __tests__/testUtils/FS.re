@@ -4,7 +4,8 @@ modification to the fs API.
 */
 module Native = {
   let dirname: option(string) = [%mel.node __dirname];
-  let dirnameOrDot = Js.Option.getWithDefault(".", dirname);
+  let dirnameOrDot =
+    Stdlib.Option.fold(~none=".", ~some=dirname => dirname, dirname);
 
   [@mel.module "fs"] [@warning "-103"]
   external readFileSync: (string, [ | `hex | `utf8 | `ascii]) => string =

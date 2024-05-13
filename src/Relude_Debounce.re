@@ -55,10 +55,11 @@ let debounce =
     timerId :=
       Some(
         Js.Global.setTimeout(
-          () => {
-            f();
-            timerId := None;
-          },
+          ~f=
+            () => {
+              f();
+              timerId := None;
+            },
           delayMS,
         ),
       );
