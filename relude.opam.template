@@ -1,3 +1,3 @@
 pin-depends: [
-  [ "bastet.dev" "git+https://github.com/qwickshifts/bastet.git#melange3" ]
+  [ "bastet.dev" "git+https://github.com/qwickshifts/bastet.git#melange4plus" ]
 ]
